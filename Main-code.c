@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#define MAX_GROUPS 10
+#define MAX_ARRAY_PER_GROUP 100
 #define MAX_SIZE 10000
 
 int createArray(int **array, size_t *size, size_t newSize);
