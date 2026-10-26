@@ -42,6 +42,7 @@ int removeElement(int *array, size_t *size, size_t index);
 void analyzeArray(const int *array, size_t size);
 int resizeArray(int **array, size_t *size, size_t newSize);
 void clearArray(int **array, size_t *size);
+void arrayActionMenu(ManagedArray *array);
 
 void initializeManager(ArrayManager *manager)
 {
