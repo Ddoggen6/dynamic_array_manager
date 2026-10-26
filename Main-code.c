@@ -412,7 +412,36 @@ int main(void)
 
 void arrayActionMenu(ManagedArray *array)
 {
-    (void)array;
-    printf("\nArray action menu opened.\n");
-    printf("Returning to main menu...\n");
+    if (array == NULL) {
+        printf("Error: Invalid array selection.\n");
+        return;
+    }
+
+    int option;
+
+    do {
+        printf("\n=== Array Action Menu ===\n");
+        printf("1. Display array\n");
+        printf("0. Return to main menu\n");
+        printf("Choose an option: ");
+
+        if (scanf("%d", &option) != 1) {
+            printf("Invalid input. Enter a number.\n");
+
+            int ch;
+            while ((ch = getchar()) != '\n' && ch != EOF) {
+            }
+
+            continue;
+        }
+
+        if (option == 1) {
+            displayArray(array->data, array->size);
+        } else if (option == 0) {
+            printf("Returning to main menu...\n");
+        } else {
+            printf("Invalid option. Please try again.\n");
+        }
+
+    } while (option != 0);
 }
