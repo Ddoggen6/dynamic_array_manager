@@ -356,16 +356,15 @@ int main(void)
             if (!resizeArray(&selected->data, &selected->size, newSize)) {
                 printf("Could not resize the array.\n");
             }
-        } else if (option == 3) {
+      } else if (option == 3) {
             int status;
             ManagedArray *selected = selectArray(&manager, &status);
 
             if (status == SELECT_ERR_TOO_MANY_ATTEMPTS) {
                 printf("Too many invalid attempts. Shutting down.\n");
                 shutdownRequested = 1;
-            } else if (selected != NULL && status == SELECT_SUCCESS) {
-                printf("Selected array successfully. Size: %zu elements.\n",
-                       selected->size);
+            } else if (status == SELECT_SUCCESS && selected != NULL) {
+                arrayActionMenu(selected);
             } else if (status == SELECT_ERR_EMPTY) {
                 printf("No array was selected.\n");
             } else {
@@ -376,7 +375,6 @@ int main(void)
         } else {
             printf("Invalid option. Please try again.\n");
         }
-
     } while (option != 0 && !shutdownRequested);
 
     for (size_t g = 0; g < MAX_GROUPS; g++) {
@@ -389,4 +387,11 @@ int main(void)
     }
 
     return 0;
+}
+
+void arrayActionMenu(ManagedArray *array)
+{
+    (void)array;
+    printf("\nArray action menu opened.\n");
+    printf("Returning to main menu...\n");
 }
