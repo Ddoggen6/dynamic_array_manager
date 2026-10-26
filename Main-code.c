@@ -7,6 +7,7 @@
 #define MAX_SIZE 10000
 
 #define CREATE_SUCCESS 100
+#define ERR_NO_VALID_DATA -99
 #define ERR_NO_FREE_SLOTS -1
 #define ERR_ALLOCATION_FAILED -2
 #define ERR_INVALID_SIZE -3
@@ -244,6 +245,26 @@ int resizeArray(int **array, size_t *size, size_t newSize)
     *size = newSize;
     printf("Array resized successfully to %zu elements.\n", *size);
     return 1;
+}
+
+void displayArray(const int *array, size_t size)
+{
+    if (array == NULL || size == 0) {
+        printf("Invalid data: error %d\n", ERR_NO_VALID_DATA);
+        return;
+    }
+
+    printf("Array (%zu elements): [", size);
+
+    for (size_t i = 0; i < size; i++) {
+        printf("%d", array[i]);
+
+        if (i < size - 1) {
+            printf(", ");
+        }
+    }
+
+    printf("]\n");
 }
 
 int main(void)
