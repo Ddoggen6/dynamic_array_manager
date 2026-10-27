@@ -1,110 +1,188 @@
 
-# Dynamic Memory Manager
+<div align="center">
 
-> A C project representing my journey into low-level programming, memory management, and systems programming.
+# ⚙️ Dynamic Memory Manager
 
-## About the Project
+**Understanding memory. Building systems. Pursuing security.**
 
-The Dynamic Memory Manager is a personal project developed to put into practice the concepts I learned while studying C.
+A C project exploring dynamic memory allocation, pointers, arrays, and the fundamentals of systems programming.
 
-Rather than keeping everything limited to individual exercises, I wanted to build something that would bring several concepts together in a single program. This project is my attempt to apply my understanding of pointers, arrays, functions, dynamic memory allocation, and memory management to a practical problem.
+<br>
 
-The project is still part of my learning journey. Its purpose is not to demonstrate that I have mastered C, but to show how I am progressing from understanding individual concepts to applying them in a more complete program.
+![C](https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=c&logoColor=black)
+![Systems Programming](https://img.shields.io/badge/Systems-Programming-8B0000?style=for-the-badge)
+![Memory Management](https://img.shields.io/badge/Memory-Management-333333?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Learning_Project-555555?style=for-the-badge)
 
-## Why I Built This Project
+</div>
 
-Learning C changed the way I think about programming.
+---
 
-Working with pointers and memory allocation made me pay closer attention to what happens behind the code: where data is stored, how memory is managed, and what a program must do to handle resources correctly.
+## 📌 About the Project
 
-I wanted a project that would challenge me to use these concepts together instead of treating them as isolated lessons.
+**Dynamic Memory Manager** is a personal C project created to put my knowledge of pointers, dynamic memory allocation, arrays, and program design into practice.
 
-The Dynamic Memory Manager represents that goal. It gives me a place to practice memory management, reason about program behavior, handle allocation failures, and improve my ability to design and debug C programs.
+Instead of keeping these concepts limited to isolated exercises, I wanted to combine them into a more complete program that would challenge me to reason about memory, manage resources, handle errors, and organize program logic.
 
-## What I Am Learning
+This project represents a stage in my development as a programmer: moving from learning individual concepts to applying them together in a practical implementation.
 
-Through this project, I am working on concepts such as:
+It is not intended to demonstrate mastery of C. It is a record of what I have learned, the problems I have worked through, and the technical curiosity that continues to drive me forward.
 
-- **Pointers:** understanding memory addresses and indirect access to data.
-- **Dynamic memory allocation:** using `malloc()`, `calloc()`, `realloc()`, and `free()`.
-- **Memory management:** handling allocation failures and avoiding invalid memory operations.
-- **Arrays:** managing elements dynamically and manipulating their contents.
-- **Functions:** separating responsibilities and organizing program logic.
-- **Input validation:** handling user input and preventing invalid operations.
-- **Problem-solving:** developing the logic before translating it into code.
+## 🎯 Project Goals
 
-These concepts are relevant to understanding how software interacts with memory and form part of the foundation I want to build for systems programming.
+The main objectives behind this project are:
 
-## My Experience with C
+- Understand dynamic memory allocation and deallocation.
+- Practice working with pointers and dynamically allocated arrays.
+- Develop functions with clearly defined responsibilities.
+- Handle invalid input and memory allocation failures.
+- Improve debugging and problem-solving skills.
+- Build a stronger foundation for systems programming.
 
-C was one of my first serious steps toward understanding programming at a lower level.
+## 🛠️ Concepts Explored
 
-As I progressed, I became increasingly interested in more than simply making programs work. I wanted to understand how they work, how they interact with memory, and why certain programming decisions can lead to errors or unexpected behavior.
+<details>
+<summary><b>Memory Management</b></summary>
 
-C challenged me to think carefully about pointers, memory ownership, allocation, and resource management. It also taught me that debugging is not just about finding syntax errors; it requires understanding the program's logic and examining assumptions.
+Understanding how programs request, use, resize, and release memory.
 
-I am still developing my skills, but the experience has given me a stronger appreciation for the relationship between software and the underlying machine.
+This includes working with:
 
-More importantly, it helped me discover a new passion: **systems programming and understanding how computers work beneath the abstractions.**
+- `malloc()`
+- `calloc()`
+- `realloc()`
+- `free()`
 
-## Why I Am Moving to Rust
+An important part of this process is understanding allocation failures, pointer validity, and the responsibility of releasing resources correctly.
 
-For now, I am moving from C to Rust to explore a different approach to systems programming.
+</details>
 
-This is not a rejection of C. C gave me the foundation that made Rust interesting to me in the first place.
+<details>
+<summary><b>Pointers and Arrays</b></summary>
 
-After working with pointers and dynamic memory, I want to understand Rust's ownership and borrowing systems and how its compiler helps prevent certain memory-safety errors.
+Pointers provide direct insight into memory addresses and indirect access to stored data.
 
-I see learning Rust as an opportunity to build on what I already know, challenge my assumptions, and discover how a language can offer low-level control while providing stronger safeguards.
+Through array operations, I practice accessing elements, modifying values, and understanding how pointer-based memory manipulation works.
 
-I may return to C for future projects, especially when it is useful for understanding operating systems, memory, or low-level software.
+</details>
 
-For now, Rust is the next step in my learning process.
+<details>
+<summary><b>Functions and Program Design</b></summary>
 
-## From C to Network Security
+The project brings several operations together in a single application.
 
-Perhaps the most important outcome of learning C is how it influenced my career direction.
+Separating functionality into dedicated functions helps make the program easier to understand, debug, and extend.
 
-My interest in memory, system behavior, and the way software interacts with the machine gradually led me toward cybersecurity. I became interested in understanding not only how systems work, but also how they can fail, how vulnerabilities arise, and how those systems can be protected.
+</details>
 
-My immediate goal is to specialize in **network security**.
+<details>
+<summary><b>Error Handling and Input Validation</b></summary>
 
-I want to develop a solid understanding of computer networks, TCP/IP, subnetting, routing, network protocols, and the techniques used to defend systems against attacks.
+Memory-related programs must account for invalid operations and unexpected conditions.
 
-C has helped spark this interest by exposing me to lower-level programming concepts and encouraging me to investigate the behavior of software rather than treating it as a black box.
+This project provides an opportunity to practice validating input, checking allocation results, and designing functions that handle failures appropriately.
 
-I understand that programming alone is not enough to become a cybersecurity professional. Networking, operating systems, security principles, and practical experience are all essential parts of the path I intend to follow.
+</details>
 
-## My Long-Term Direction: Cybersecurity and AI
+## 🧠 Why I Built This Project
 
-My current priority is to establish a strong foundation in networking and cybersecurity before pursuing a more specialized direction.
+Learning C changed the way I approach programming.
 
-My intended path is:
+I became increasingly interested in what happens beneath the abstractions: where data is stored, how memory is allocated, how pointers reference objects, and why certain mistakes can cause unexpected behavior.
 
-1. **Systems programming:** build on my C experience while learning Rust.
-2. **Computer networking:** develop a strong understanding of network architecture and protocols.
-3. **Network security:** study defensive security, vulnerability analysis, and secure network administration.
-4. **AI security:** eventually explore the security of AI systems and the relationship between artificial intelligence and cybersecurity.
+I wanted to move beyond writing code that simply works and begin understanding **why it works, how it interacts with memory, and what can go wrong**.
 
-AI security is a longer-term goal. I want to understand the fundamentals first, rather than rush into a specialization without the necessary technical foundation.
+Dynamic Memory Manager gave me a practical environment in which to investigate those questions.
 
-## My Learning Philosophy
+More importantly, it helped me discover an interest in systems programming and the relationship between software and the underlying machine.
 
-I prefer to understand the logic behind a solution before focusing on its syntax.
+## 🖥️ From C to Rust
 
-When working on a problem, I try to reason through the requirements, identify the necessary operations, and understand how the pieces fit together before implementing them.
+C remains an important part of my programming journey.
 
-I believe this approach helps me develop problem-solving skills that are transferable across programming languages.
+Its explicit approach to memory management challenged me to think carefully about pointers, resource lifetimes, allocation, and the consequences of implementation decisions.
 
-This project reflects that philosophy: learning by building, making mistakes, debugging, and improving my understanding one step at a time.
+That experience also made Rust particularly intriguing to me.
 
-## Final Thoughts
+I am now shifting my primary learning focus toward Rust to explore its ownership and borrowing systems, its compile-time memory-safety guarantees, and its approach to systems programming.
 
-This project represents more than a dynamic array implementation. It represents a stage in my development as a programmer and the curiosity that C helped me discover.
+I do not see Rust as a replacement for the knowledge I gained from C. I see it as an opportunity to build on that foundation and investigate a different approach to writing reliable low-level software.
 
-C introduced me to the importance of understanding memory and system behavior. That experience encouraged me to explore systems programming, influenced my decision to pursue network security, and gave me a reason to continue with Rust.
+C taught me to pay attention to memory. Rust challenges me to understand how a language can enforce stronger guarantees around it.
 
-I do not consider this the end of my journey with C. I consider it a milestone: a practical representation of what I have learned so far and a foundation for what I intend to learn next.
+## 🔐 From Systems Programming to Network Security
 
-**Built as part of my journey from learning C to exploring systems programming, network security, and eventually AI security.**
+One of the most significant outcomes of learning C was discovering the direction I want to pursue professionally.
 
+My interest in pointers, memory, and system behavior gradually led me toward cybersecurity. I became interested in understanding how systems operate, how vulnerabilities emerge, and how software and infrastructure can be protected.
+
+My immediate specialization goal is **network security**.
+
+I intend to develop a strong foundation in:
+
+- Computer networking and TCP/IP.
+- IPv4, subnetting, and routing.
+- Network protocols and their behavior.
+- Network monitoring and traffic analysis.
+- Defensive security and vulnerability assessment.
+- Secure network architecture and administration.
+
+Programming is only one part of cybersecurity, but it gives me a way to investigate system behavior, automate tasks, and eventually develop security-oriented tools.
+
+My experience with C helped establish that connection between understanding technology at a lower level and learning how to protect the systems built on top of it.
+
+## 🚀 Long-Term Direction
+
+My current priority is to establish solid technical foundations before specializing further.
+
+My intended progression is:
+
+<pre>
+C Fundamentals
+      │
+      ▼
+Rust & Systems Programming
+      │
+      ▼
+Computer Networking
+      │
+      ▼
+Network Security
+      │
+      ▼
+AI Security
+</pre>
+
+AI security is a longer-term objective. Before pursuing it, I want to develop practical competence in networking, operating systems, programming, and cybersecurity fundamentals.
+
+I see this progression as a direction to work toward rather than a rigid sequence. The skills I develop along the way will determine how I approach future projects and specializations.
+
+## 📖 My Learning Philosophy
+
+I prefer understanding the logic behind a solution before focusing on its syntax.
+
+When approaching a problem, I try to identify its requirements, reason about the operations involved, and understand how the components should interact before implementing the solution.
+
+I value experimentation, debugging, and learning from mistakes because they force me to examine my assumptions rather than simply reproduce an existing implementation.
+
+This project reflects that philosophy: learning by building, investigating, and gradually improving my understanding.
+
+## 🧭 What This Repository Represents
+
+Dynamic Memory Manager is more than an exercise in dynamic arrays and memory allocation.
+
+It represents an important stage in my development as a programmer: the point at which learning C began to influence my broader technical interests and career direction.
+
+The project helped strengthen my appreciation for low-level programming, encouraged me to explore Rust, and contributed to my decision to pursue network security.
+
+I may return to C for future projects whenever its capabilities and learning opportunities make it the right tool for the job.
+
+For now, this repository stands as a practical record of my progress and a foundation for the work that comes next.
+
+---
+
+<div align="center">
+
+**C was the foundation. Systems programming is the curiosity. Cybersecurity is the direction.**
+
+</div>
