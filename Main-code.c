@@ -51,11 +51,13 @@ void displayArray(const int *array, size_t size);
 int addElement(int **array, size_t *size,
                size_t index, int value);
 
-int removeElement(int *array, size_t *size, size_t index);
+int removeElement(int **array, size_t *size, size_t index);
+
 void analyzeArray(const int *array, size_t size);
 int resizeArray(int **array, size_t *size, size_t newSize);
 void clearArray(int **array, size_t *size);
 void arrayActionMenu(ManagedArray *array);
+
 
 /* Initialize the manager */
 
@@ -74,6 +76,7 @@ void initializeManager(ArrayManager *manager)
         }
     }
 }
+
 
 /* Create an array */
 
@@ -129,7 +132,6 @@ int createArray(ArrayManager *manager, size_t newSize,
         return ERR_INVALID_ARGUMENT;
     }
 
-    /* Initialize all elements to zero. */
     int *newData = calloc(newSize, sizeof *newData);
 
     if (newData == NULL) {
@@ -145,6 +147,7 @@ int createArray(ArrayManager *manager, size_t newSize,
 
     return CREATE_SUCCESS;
 }
+
 
 /* Selection error artwork */
 
@@ -164,6 +167,7 @@ static void printSelectionErrorArt(void)
     printf("  Check the group and slot, then try again.\n\n");
 }
 
+
 /* Read a selection number */
 
 static int readSelectionNumber(const char *prompt, long long *value)
@@ -181,6 +185,7 @@ static int readSelectionNumber(const char *prompt, long long *value)
 
     return 0;
 }
+
 
 /* Select an existing array */
 
@@ -258,6 +263,7 @@ ManagedArray *selectArray(ArrayManager *manager, int *status)
     return selected;
 }
 
+
 /* Resize an existing array */
 
 int resizeArray(int **array, size_t *size, size_t newSize)
@@ -288,7 +294,6 @@ int resizeArray(int **array, size_t *size, size_t newSize)
         return 0;
     }
 
-    /* Initialize any newly added elements to zero. */
     if (newSize > *size) {
         for (size_t i = *size; i < newSize; i++) {
             temp[i] = 0;
@@ -302,6 +307,7 @@ int resizeArray(int **array, size_t *size, size_t newSize)
 
     return 1;
 }
+
 
 /* Display an array */
 
@@ -325,59 +331,72 @@ void displayArray(const int *array, size_t size)
     printf("]\n");
 }
 
+
 /* Insert an element at a specified zero-based index */
 
 int addElement(int **array, size_t *size,
                size_t index, int value)
 {
-    /* Validate the function arguments. */
     if (array == NULL || size == NULL) {
         return ERR_INVALID_ARGUMENT;
     }
 
-    /* An array must exist and contain at least one element. */
-    if (*array == NULL || *size == 0) {
+    if (*array == NULL) {
         return ERR_NO_VALID_DATA;
     }
 
-    /* Do not exceed the maximum allowed size. */
     if (*size >= MAX_SIZE) {
         return ADD_ERR_MAX_SIZE;
     }
 
-    /* The index may equal size when inserting at the end. */
     if (index > *size) {
         return ADD_ERR_INVALID_INDEX;
     }
 
-    /*
-     * Allocate space for one additional element.
-     * Use a temporary pointer so allocation failure
-     * does not lose the original allocation.
-     */
     int *temp = realloc(*array, (*size + 1) * sizeof **array);
 
     if (temp == NULL) {
         return ERR_ALLOCATION_FAILED;
     }
 
-    /*
-     * Shift elements backward to open the insertion position.
-     * Starting at size is safe because the allocation has grown.
-     */
     for (size_t i = *size; i > index; i--) {
         temp[i] = temp[i - 1];
     }
 
-    /* Place the new value at the requested index. */
     temp[index] = value;
 
-    /* Commit the updated pointer and size. */
     *array = temp;
     (*size)++;
 
     return ADD_SUCCESS;
 }
+
+
+/* Remove an element at a specified zero-based index */
+
+int removeElement(int **array, size_t *size, size_t index)
+{
+    if (array == NULL || size == NULL) {
+        return ERR_INVALID_ARGUMENT;
+    }
+
+    if (*array == NULL || *size == 0) {
+        return ERR_NO_VALID_DATA;
+    }
+
+    if (index >= *size) {
+        return REMOVE_ERR_INVALID_INDEX;
+    }
+
+    for (size_t i = index; i < *size - 1; i++) {
+        (*array)[i] = (*array)[i + 1];
+    }
+
+    (*size)--;
+
+    return REMOVE_SUCCESS;
+}
+
 
 /* Main program */
 
@@ -437,12 +456,16 @@ int main(void)
             if (result == CREATE_SUCCESS) {
                 printf("Array created in Group %d, Slot %d.\n",
                        selectedGroup + 1, selectedSlot + 1);
+
             } else if (result == ERR_NO_FREE_SLOTS) {
                 printf("No free slots available.\n");
+
             } else if (result == ERR_ALLOCATION_FAILED) {
                 printf("Memory allocation failed.\n");
+
             } else if (result == ERR_INVALID_SIZE) {
                 printf("Invalid array size.\n");
+
             } else {
                 printf("Could not create the array. Error: %d\n",
                        result);
@@ -554,6 +577,7 @@ int main(void)
     } while (option != 0 && !shutdownRequested);
 
     /* Release all allocated memory. */
+
     for (size_t g = 0; g < MAX_GROUPS; g++) {
         for (size_t s = 0; s < MAX_ARRAY_PER_GROUP; s++) {
             free(manager.groups[g].arrays[s].data);
@@ -567,6 +591,7 @@ int main(void)
 
     return 0;
 }
+
 
 /* Menu for actions on the selected array */
 
@@ -583,6 +608,7 @@ void arrayActionMenu(ManagedArray *array)
         printf("\n=== Array Action Menu ===\n");
         printf("1. Display array\n");
         printf("2. Add element\n");
+        printf("3. Remove element\n");
         printf("0. Return to main menu\n");
         printf("Choose an option: ");
 
@@ -623,10 +649,6 @@ void arrayActionMenu(ManagedArray *array)
                 continue;
             }
 
-            /*
-             * Validate the human-friendly position before
-             * converting it to a zero-based index.
-             */
             if (position < 1 ||
                 (unsigned long long)position > array->size + 1) {
 
@@ -660,7 +682,7 @@ void arrayActionMenu(ManagedArray *array)
                 printf("Element inserted successfully.\n");
 
             } else if (result == ERR_NO_VALID_DATA) {
-                printf("Cannot insert into an invalid or empty array.\n");
+                printf("Invalid array data.\n");
 
             } else if (result == ERR_ALLOCATION_FAILED) {
                 printf("Memory allocation failed. Array unchanged.\n");
@@ -676,6 +698,59 @@ void arrayActionMenu(ManagedArray *array)
 
             } else {
                 printf("Insertion failed. Error: %d\n", result);
+            }
+
+        } else if (option == 3) {
+            long long position;
+
+            if (array->size == 0) {
+                printf("The array is empty.\n");
+                continue;
+            }
+
+            printf("Enter removal position (1-%zu): ",
+                   array->size);
+
+            if (scanf("%lld", &position) != 1) {
+                printf("Invalid position input.\n");
+
+                int ch;
+
+                while ((ch = getchar()) != '\n' && ch != EOF) {
+                }
+
+                continue;
+            }
+
+            if (position < 1 ||
+                (unsigned long long)position > array->size) {
+
+                printf("Invalid removal position.\n");
+                continue;
+            }
+
+            size_t index = (size_t)(position - 1);
+
+            int result = removeElement(
+                &array->data,
+                &array->size,
+                index
+            );
+
+            if (result == REMOVE_SUCCESS) {
+                printf("Element removed successfully.\n");
+
+            } else if (result == ERR_NO_VALID_DATA) {
+                printf("Invalid array data.\n");
+
+            } else if (result == REMOVE_ERR_INVALID_INDEX) {
+                printf("Invalid removal index.\n");
+
+            } else if (result == ERR_INVALID_ARGUMENT) {
+                printf("Invalid function arguments.\n");
+
+            } else {
+                printf("Removal failed. Error: %d\n", result);
             }
 
         } else if (option == 0) {
