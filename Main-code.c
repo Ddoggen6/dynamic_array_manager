@@ -22,6 +22,9 @@
 #define ADD_ERR_INVALID_INDEX -10
 #define ADD_ERR_MAX_SIZE -11
 
+#define REMOVE_SUCCESS 102
+#define REMOVE_ERR_INVALID_INDEX -12
+
 typedef struct {
     int *data;
     size_t size;
