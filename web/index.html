@@ -29,17 +29,17 @@
         <section class="overview">
             <div class="overview-card">
                 <span class="overview-label">Total Groups</span>
-                <h2>10</h2>
+                <h2 id="total-groups">10</h2>
             </div>
 
             <div class="overview-card">
                 <span class="overview-label">Occupied Slots</span>
-                <h2>0</h2>
+                <h2 id="occupied-slots">0</h2>
             </div>
 
             <div class="overview-card">
                 <span class="overview-label">Available Slots</span>
-                <h2>1000</h2>
+                <h2 id="available-slots">1000</h2>
             </div>
         </section>
 
@@ -52,34 +52,10 @@
                 </div>
             </div>
 
-            <div class="groups-grid">
-
-                <article class="group-card">
-                    <div class="group-header">
-                        <h3>Group 01</h3>
-                        <span class="group-count">0 / 100</span>
-                    </div>
-
-                    <div class="slot-grid">
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                        <div class="slot empty"></div>
-                    </div>
-
-                    <p class="group-footer">No arrays allocated</p>
-                </article>
-
+            <div class="groups-grid" id="groups-container">
             </div>
 
         </section>
-
     </main>
 
     <script src="script.js"></script>
