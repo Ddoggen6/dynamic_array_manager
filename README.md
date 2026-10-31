@@ -1,18 +1,18 @@
 
 <div align="center">
 
-# ⚙️ Dynamic Memory Manager
+# ⚙️ Dynamic Array Manager
 
 **Understanding memory. Building systems. Pursuing security.**
 
-A C project exploring dynamic memory allocation, pointers, arrays, and the fundamentals of systems programming.
+A modular C project exploring dynamic memory allocation, pointers, array manipulation, and systems programming through a command-line application.
 
 <br>
 
 ![C](https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=c&logoColor=black)
 ![Systems Programming](https://img.shields.io/badge/Systems-Programming-8B0000?style=for-the-badge)
 ![Memory Management](https://img.shields.io/badge/Memory-Management-333333?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Learning_Project-555555?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Completed_Learning_Project-555555?style=for-the-badge)
 
 </div>
 
@@ -20,9 +20,13 @@ A C project exploring dynamic memory allocation, pointers, arrays, and the funda
 
 ## 📌 About the Project
 
-**Dynamic Memory Manager** is a personal C project created to put my knowledge of pointers, dynamic memory allocation, arrays, and program design into practice.
+**Dynamic Array Manager** is a personal C project created to put my knowledge of pointers, dynamic memory allocation, arrays, and program design into practice.
 
 Instead of keeping these concepts limited to isolated exercises, I wanted to combine them into a more complete program that would challenge me to reason about memory, manage resources, handle errors, and organize program logic.
+
+The application allows users to create and manage dynamically allocated integer arrays through a command-line interface.
+
+Arrays are organized into groups, with each group containing a fixed number of available slots. The program manages their allocation, modification, selection, and deletion.
 
 This project represents a stage in my development as a programmer: moving from learning individual concepts to applying them together in a practical implementation.
 
@@ -35,11 +39,78 @@ The main objectives behind this project are:
 - Understand dynamic memory allocation and deallocation.
 - Practice working with pointers and dynamically allocated arrays.
 - Develop functions with clearly defined responsibilities.
+- Separate program logic from user interaction.
 - Handle invalid input and memory allocation failures.
+- Manage resources throughout the application's lifecycle.
 - Improve debugging and problem-solving skills.
 - Build a stronger foundation for systems programming.
 
-## 🛠️ Concepts Explored
+## ⚙️ Features
+
+The application currently supports:
+
+| Feature | Description |
+|---|---|
+| Array Creation | Dynamically allocate integer arrays. |
+| Group Management | Organize arrays into groups and slots. |
+| Array Selection | Retrieve an existing array by its group and slot. |
+| Resizing | Change an array's allocated size. |
+| Element Insertion | Insert values at a specified position. |
+| Element Removal | Remove elements from an array. |
+| Array Deletion | Release allocated memory and update group accounting. |
+| Input Validation | Reject invalid positions, sizes, and selections. |
+| Error Handling | Handle invalid operations and allocation failures. |
+| Memory Cleanup | Release remaining allocations before program termination. |
+
+## 🏗️ Project Structure
+
+The project uses a modular structure to separate declarations, implementation, and user interaction.
+
+```text
+dynamic_array_manager/
+│
+├── src/
+│   ├── main.c
+│   ├── array_manager.c
+│   └── array_manager.h
+│
+├── README.md
+└── array_manager
+```
+
+### Source Files
+
+| File | Responsibility |
+|---|---|
+| `main.c` | Command-line interface, menus, and user interaction. |
+| `array_manager.c` | Implementation of memory and array-management operations. |
+| `array_manager.h` | Constants, error codes, structures, and function declarations. |
+
+This separation makes the application easier to maintain and extend while keeping the core management logic independent of the command-line interface.
+
+## 🛠️ Technologies and Tools
+
+- **C11** — Primary programming language.
+- **GCC** — Compilation.
+- **Git** — Version control.
+- **Linux** — Development environment.
+
+### Compilation
+
+The project can be compiled using GCC with strict warning flags:
+
+```bash
+gcc -std=c11 -Wall -Wextra -Wpedantic -Werror \
+src/main.c src/array_manager.c -o array_manager
+```
+
+Run the application:
+
+```bash
+./array_manager
+```
+
+## 🧠 Concepts Explored
 
 <details>
 <summary><b>Memory Management</b></summary>
@@ -62,16 +133,29 @@ An important part of this process is understanding allocation failures, pointer 
 
 Pointers provide direct insight into memory addresses and indirect access to stored data.
 
-Through array operations, I practice accessing elements, modifying values, and understanding how pointer-based memory manipulation works.
+Through array operations, I practice accessing elements, modifying values, inserting and removing elements, and understanding how pointer-based memory manipulation works.
 
 </details>
 
 <details>
-<summary><b>Functions and Program Design</b></summary>
+<summary><b>Structures and Data Organization</b></summary>
 
-The project brings several operations together in a single application.
+The application uses structures to represent its data:
 
-Separating functionality into dedicated functions helps make the program easier to understand, debug, and extend.
+- `ManagedArray` stores an array pointer and its logical size.
+- `Group` organizes multiple managed arrays.
+- `ArrayManager` coordinates the collection of groups.
+
+These structures helped me understand how related data can be organized into more complex representations.
+
+</details>
+
+<details>
+<summary><b>Modular Programming</b></summary>
+
+The project separates its declarations, implementations, and user interface into different source files.
+
+Working with header files, function prototypes, and separate compilation helped me understand how multi-file C programs are organized and linked.
 
 </details>
 
@@ -80,7 +164,13 @@ Separating functionality into dedicated functions helps make the program easier 
 
 Memory-related programs must account for invalid operations and unexpected conditions.
 
-This project provides an opportunity to practice validating input, checking allocation results, and designing functions that handle failures appropriately.
+This project provides an opportunity to practice:
+
+- Validating user input.
+- Checking allocation results.
+- Returning operation-specific status codes.
+- Handling invalid array selections.
+- Preventing operations outside valid array boundaries.
 
 </details>
 
@@ -92,7 +182,7 @@ I became increasingly interested in what happens beneath the abstractions: where
 
 I wanted to move beyond writing code that simply works and begin understanding **why it works, how it interacts with memory, and what can go wrong**.
 
-Dynamic Memory Manager gave me a practical environment in which to investigate those questions.
+Dynamic Array Manager gave me a practical environment in which to investigate those questions.
 
 More importantly, it helped me discover an interest in systems programming and the relationship between software and the underlying machine.
 
@@ -169,7 +259,7 @@ This project reflects that philosophy: learning by building, investigating, and 
 
 ## 🧭 What This Repository Represents
 
-Dynamic Memory Manager is more than an exercise in dynamic arrays and memory allocation.
+Dynamic Array Manager is more than an exercise in dynamic arrays and memory allocation.
 
 It represents an important stage in my development as a programmer: the point at which learning C began to influence my broader technical interests and career direction.
 
