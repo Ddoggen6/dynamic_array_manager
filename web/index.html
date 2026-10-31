@@ -1,12 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Dynamic Array Manager</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>Dynamic Array Manager</h1>
-    <p>Web server is working.</p>
+
+    <header class="header">
+        <div class="brand">
+            <h1>Dynamic Array Manager</h1>
+            <p>Memory management dashboard</p>
+        </div>
+
+        <div class="server-status">
+            <span class="status-indicator"></span>
+            <span>Server online</span>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="overview">
+            <div class="overview-card">
+                <span class="overview-label">Total Groups</span>
+                <h2>10</h2>
+            </div>
+
+            <div class="overview-card">
+                <span class="overview-label">Occupied Slots</span>
+                <h2>0</h2>
+            </div>
+
+            <div class="overview-card">
+                <span class="overview-label">Available Slots</span>
+                <h2>1000</h2>
+            </div>
+        </section>
+
+        <section class="groups-section">
+
+            <div class="section-header">
+                <div>
+                    <h2>Memory Groups</h2>
+                    <p>Manage your allocated arrays</p>
+                </div>
+            </div>
+
+            <div class="groups-grid">
+
+                <article class="group-card">
+                    <div class="group-header">
+                        <h3>Group 01</h3>
+                        <span class="group-count">0 / 100</span>
+                    </div>
+
+                    <div class="slot-grid">
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                        <div class="slot empty"></div>
+                    </div>
+
+                    <p class="group-footer">No arrays allocated</p>
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
