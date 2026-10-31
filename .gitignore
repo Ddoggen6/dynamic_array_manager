@@ -1,0 +1,8 @@
+# Compiled binaries
+array_manager
+
+# Object files
+*.o
+
+# Debug binaries
+*.out
