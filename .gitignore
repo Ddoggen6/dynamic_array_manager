@@ -1,5 +1,6 @@
 # Compiled binaries
 array_manager
+array_manager_web
 
 # Object files
 *.o
