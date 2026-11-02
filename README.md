@@ -5,14 +5,15 @@
 
 **Understanding memory. Building systems. Pursuing security.**
 
-A modular C project exploring dynamic memory allocation, pointers, array manipulation, and systems programming through a command-line application.
+A modular C project exploring dynamic memory allocation, pointers, array manipulation, and systems programming through a command-line application and an experimental web interface.
 
 <br>
 
 ![C](https://img.shields.io/badge/C-A8B9CC?style=for-the-badge&logo=c&logoColor=black)
 ![Systems Programming](https://img.shields.io/badge/Systems-Programming-8B0000?style=for-the-badge)
 ![Memory Management](https://img.shields.io/badge/Memory-Management-333333?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Completed_Learning_Project-555555?style=for-the-badge)
+![Web Interface](https://img.shields.io/badge/Web-Interface-6D4BC3?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-In_Development-555555?style=for-the-badge)
 
 </div>
 
@@ -24,9 +25,11 @@ A modular C project exploring dynamic memory allocation, pointers, array manipul
 
 Instead of keeping these concepts limited to isolated exercises, I wanted to combine them into a more complete program that would challenge me to reason about memory, manage resources, handle errors, and organize program logic.
 
-The application allows users to create and manage dynamically allocated integer arrays through a command-line interface.
+The application allows users to create and manage dynamically allocated integer arrays through a command-line interface. Arrays are organized into groups, with each group containing a fixed number of available slots.
 
-Arrays are organized into groups, with each group containing a fixed number of available slots. The program manages their allocation, modification, selection, and deletion.
+The project has also expanded beyond the command line. I am experimenting with a web interface that communicates directly with the C application through an HTTP server and a JSON API.
+
+This introduces another layer of learning: understanding how a systems-level application can expose its functionality to a browser without moving its core logic into another language.
 
 This project represents a stage in my development as a programmer: moving from learning individual concepts to applying them together in a practical implementation.
 
@@ -42,12 +45,15 @@ The main objectives behind this project are:
 - Separate program logic from user interaction.
 - Handle invalid input and memory allocation failures.
 - Manage resources throughout the application's lifecycle.
+- Understand HTTP communication between a browser and a C application.
+- Explore JSON generation and API design in C.
+- Build a frontend that communicates with a backend.
 - Improve debugging and problem-solving skills.
 - Build a stronger foundation for systems programming.
 
 ## ⚙️ Features
 
-The application currently supports:
+### Core Array Management
 
 | Feature | Description |
 |---|---|
@@ -62,9 +68,23 @@ The application currently supports:
 | Error Handling | Handle invalid operations and allocation failures. |
 | Memory Cleanup | Release remaining allocations before program termination. |
 
+### Web Interface and API
+
+| Feature | Description |
+|---|---|
+| HTTP Server | Run a local HTTP server using Mongoose. |
+| Static File Serving | Serve HTML, CSS, and JavaScript files. |
+| JSON API | Expose array-manager information through HTTP endpoints. |
+| Group Information | Retrieve information about all 10 groups. |
+| Slot Statistics | Report occupied and available slots per group. |
+| Frontend Communication | Retrieve backend data using JavaScript `fetch()`. |
+| Dashboard | Display a web-based interface for memory management. |
+
+**Current implementation note:** The group-information endpoint and frontend communication are working. Dynamic rendering and additional array-management operations through the web interface are still under development.
+
 ## 🏗️ Project Structure
 
-The project uses a modular structure to separate declarations, implementation, and user interaction.
+The project uses a modular structure to separate declarations, implementation, user interaction, HTTP communication, and frontend resources.
 
 ```text
 dynamic_array_manager/
@@ -72,10 +92,22 @@ dynamic_array_manager/
 ├── src/
 │   ├── main.c
 │   ├── array_manager.c
-│   └── array_manager.h
+│   ├── array_manager.h
+│   └── web_server.c
+│
+├── mongoose/
+│   ├── mongoose.c
+│   └── mongoose.h
+│
+├── web/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
 │
 ├── README.md
-└── array_manager
+│
+├── array_manager
+└── array_manager_web
 ```
 
 ### Source Files
@@ -85,30 +117,148 @@ dynamic_array_manager/
 | `main.c` | Command-line interface, menus, and user interaction. |
 | `array_manager.c` | Implementation of memory and array-management operations. |
 | `array_manager.h` | Constants, error codes, structures, and function declarations. |
+| `web_server.c` | HTTP server initialization, request handling, and API endpoints. |
+| `mongoose.c` | HTTP server implementation provided by Mongoose. |
+| `mongoose.h` | Mongoose declarations and configuration. |
+| `index.html` | Web dashboard structure. |
+| `style.css` | Dashboard layout and visual styling. |
+| `script.js` | Frontend logic and communication with the C backend. |
 
-This separation makes the application easier to maintain and extend while keeping the core management logic independent of the command-line interface.
+The CLI and web server are separate executables. Both use the same array-management implementation, but each has its own entry point.
+
+## 🌐 Web Architecture
+
+The web interface introduces a separation between the frontend and the application's core logic.
+
+The browser communicates with the C backend through HTTP requests. Mongoose handles incoming connections, serves static frontend resources, and forwards API requests to the appropriate C functions.
+
+The current architecture follows this flow:
+
+```text
+             Browser
+                |
+                |
+        HTML / CSS / JS
+                |
+                | HTTP Request
+                v
+        Mongoose HTTP Server
+                |
+                v
+          web_server.c
+                |
+                v
+          array_manager.c
+                |
+                v
+          ArrayManager
+                |
+                | JSON Response
+                v
+             Browser
+```
+
+### Current API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/hello` | Basic server connectivity test. |
+| GET | `/api/groups` | Retrieve information about all groups. |
+
+### Example API Response
+
+The `/api/groups` endpoint returns a JSON representation of the manager's current state.
+
+```json
+{
+    "groups": [
+        {
+            "group": 1,
+            "occupied": 1,
+            "available": 99,
+            "arrays": [
+                {
+                    "slot": 1,
+                    "size": 10
+                }
+            ]
+        },
+        {
+            "group": 2,
+            "occupied": 1,
+            "available": 99,
+            "arrays": [
+                {
+                    "slot": 1,
+                    "size": 25
+                }
+            ]
+        }
+    ]
+}
+```
+
+The response includes group numbers, occupied slots, available slots, and metadata about allocated arrays.
+
+Group and slot numbers are represented using one-based indexing in the API, while the underlying C implementation uses zero-based indexing.
 
 ## 🛠️ Technologies and Tools
 
-- **C11** — Primary programming language.
+### Backend
+
+- **C** — Primary programming language.
 - **GCC** — Compilation.
+- **Mongoose** — Embedded HTTP server.
 - **Git** — Version control.
 - **Linux** — Development environment.
 
+### Frontend
+
+- **HTML5** — Dashboard structure.
+- **CSS3** — Layout and visual styling.
+- **JavaScript** — Frontend logic and HTTP communication.
+- **Fetch API** — Communication with the C backend.
+
 ### Compilation
 
-The project can be compiled using GCC with strict warning flags:
+The CLI and web server must be compiled separately because they have different entry points.
+
+**Command-line application:**
 
 ```bash
 gcc -std=c11 -Wall -Wextra -Wpedantic -Werror \
-src/main.c src/array_manager.c -o array_manager
+    src/main.c src/array_manager.c \
+    -o array_manager
 ```
 
-Run the application:
+Run:
 
 ```bash
 ./array_manager
 ```
+
+**Web server:**
+
+```bash
+gcc -std=gnu11 -Wall -Wextra -Wpedantic \
+    -Imongoose \
+    src/web_server.c src/array_manager.c mongoose/mongoose.c \
+    -o array_manager_web
+```
+
+Run:
+
+```bash
+./array_manager_web
+```
+
+The web server listens locally at:
+
+```text
+http://127.0.0.1:8080
+```
+
+The frontend can then be accessed through the same address.
 
 ## 🧠 Concepts Explored
 
@@ -153,9 +303,41 @@ These structures helped me understand how related data can be organized into mor
 <details>
 <summary><b>Modular Programming</b></summary>
 
-The project separates its declarations, implementations, and user interface into different source files.
+The project separates its declarations, implementations, and user interfaces into different source files.
 
 Working with header files, function prototypes, and separate compilation helped me understand how multi-file C programs are organized and linked.
+
+</details>
+
+<details>
+<summary><b>HTTP and API Development</b></summary>
+
+The web interface introduced me to the relationship between HTTP servers, clients, and backend applications.
+
+Through Mongoose, I am exploring:
+
+- HTTP server initialization.
+- Request handling and URI matching.
+- Static file serving.
+- HTTP response generation.
+- JSON serialization.
+- Passing application data to request handlers.
+
+</details>
+
+<details>
+<summary><b>Frontend and Backend Communication</b></summary>
+
+Using HTML, CSS, and JavaScript, I am learning how a browser can interact with an application written in C.
+
+This includes:
+
+- Structuring a dashboard with HTML.
+- Styling interfaces with CSS.
+- Making HTTP requests using `fetch()`.
+- Parsing JSON responses.
+- Working with JavaScript objects and arrays.
+- Dynamically updating the interface with backend data.
 
 </details>
 
@@ -183,6 +365,8 @@ I became increasingly interested in what happens beneath the abstractions: where
 I wanted to move beyond writing code that simply works and begin understanding **why it works, how it interacts with memory, and what can go wrong**.
 
 Dynamic Array Manager gave me a practical environment in which to investigate those questions.
+
+Expanding it into a web-based application introduced another interesting challenge: connecting a low-level application to a browser while keeping its core logic independent of the frontend.
 
 More importantly, it helped me discover an interest in systems programming and the relationship between software and the underlying machine.
 
@@ -227,21 +411,21 @@ My current priority is to establish solid technical foundations before specializ
 
 My intended progression is:
 
-<pre>
+```text
 C Fundamentals
-      │
-      ▼
+      |
+      v
 Rust & Systems Programming
-      │
-      ▼
+      |
+      v
 Computer Networking
-      │
-      ▼
+      |
+      v
 Network Security
-      │
-      ▼
+      |
+      v
 AI Security
-</pre>
+```
 
 AI security is a longer-term objective. Before pursuing it, I want to develop practical competence in networking, operating systems, programming, and cybersecurity fundamentals.
 
@@ -265,6 +449,8 @@ It represents an important stage in my development as a programmer: the point at
 
 The project helped strengthen my appreciation for low-level programming, encouraged me to explore Rust, and contributed to my decision to pursue network security.
 
+The addition of a web interface also gave me an opportunity to explore how C applications can interact with other technologies without abandoning their original architecture.
+
 I may return to C for future projects whenever its capabilities and learning opportunities make it the right tool for the job.
 
 For now, this repository stands as a practical record of my progress and a foundation for the work that comes next.
@@ -276,3 +462,4 @@ For now, this repository stands as a practical record of my progress and a found
 **C was the foundation. Systems programming is the curiosity. Cybersecurity is the direction.**
 
 </div>
+
