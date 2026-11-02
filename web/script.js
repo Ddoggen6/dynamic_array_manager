@@ -10,7 +10,8 @@ async function fetchGroups() {
 
         const data = await response.json();
 
-        console.log(data);
+      console.log(data);
+      renderGroups(data.groups);
 
     } catch (error) {
 
@@ -19,5 +20,22 @@ async function fetchGroups() {
     }
 
 }
+
+function renderGroups(groups) {
+
+    const container = document.getElementById("groups-container");
+
+    groups.forEach(function(group) {
+
+        const new_element = document.createElement("article");
+
+        new_element.classList.add("group-card");
+
+        container.appendChild(new_element);
+
+    });
+
+}
+
 
 fetchGroups();
