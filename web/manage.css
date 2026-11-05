@@ -1,0 +1,125 @@
+/* Management page */
+
+.management-container {
+    width: min(1100px, 90%);
+    margin: 40px auto;
+}
+
+.management-header {
+    margin-bottom: 30px;
+}
+
+.management-header h1 {
+    color: var(--text);
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.management-header p {
+    color: var(--text-muted);
+}
+
+/* Management cards */
+
+.management-card {
+    padding: 24px;
+    margin-bottom: 24px;
+
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.management-card h2 {
+    color: var(--text);
+    font-size: 19px;
+    margin-bottom: 20px;
+}
+
+/* Forms */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+
+    color: var(--text);
+    background: var(--background);
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    outline: none;
+}
+
+.form-control:focus {
+    border-color: var(--accent);
+}
+
+/* Buttons */
+
+.primary-button,
+.secondary-button {
+    padding: 11px 18px;
+
+    border: none;
+    border-radius: 8px;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.primary-button {
+    color: #ffffff;
+    background: var(--accent-dim);
+}
+
+.primary-button:hover {
+    background: var(--accent);
+}
+
+.secondary-button {
+    color: var(--text);
+    background: var(--surface-hover);
+    border: 1px solid var(--border);
+}
+
+.secondary-button:hover {
+    border-color: var(--accent);
+}
+
+/* Feedback */
+
+.form-message {
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+
+    .management-container {
+        width: 94%;
+        margin: 24px auto;
+    }
+
+    .management-card {
+        padding: 18px;
+    }
+
+}
