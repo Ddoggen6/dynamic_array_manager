@@ -81,3 +81,11 @@ function renderGroups(groups) {
 }
 
 fetchGroups();
+
+const form = document.getElementById("create-array-form");
+
+form.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+});
