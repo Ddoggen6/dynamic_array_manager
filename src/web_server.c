@@ -1,12 +1,15 @@
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+
 #include "array_manager.h"
 #include "mongoose.h"
 
 
+/* Build JSON strings dynamically. */
 
 static int appendJson(char **json,
                       size_t *capacity,
@@ -43,9 +46,11 @@ static int appendJson(char **json,
     size_t required = *length + (size_t)needed + 1;
 
     if (required > *capacity) {
+
         size_t newCapacity = (*capacity == 0) ? 128 : *capacity;
 
         while (newCapacity < required) {
+
             if (newCapacity > SIZE_MAX / 2) {
                 newCapacity = required;
                 break;
@@ -83,6 +88,9 @@ static int appendJson(char **json,
     return 0;
 }
 
+
+/* Return information about all groups. */
+
 static void getGroups(struct mg_connection *connection,
                       ArrayManager *manager) {
 
@@ -96,6 +104,7 @@ static void getGroups(struct mg_connection *connection,
 
     if (appendJson(&json, &capacity, &length, "{\"groups\":[")) {
         free(json);
+        mg_http_reply(connection, 500, "", "JSON generation failed\n");
         return;
     }
 
@@ -103,7 +112,6 @@ static void getGroups(struct mg_connection *connection,
 
         size_t occupied = 0;
 
-        // First loop: count occupied slots.
         for (size_t j = 0; j < MAX_ARRAY_PER_GROUP; j++) {
 
             if (manager->groups[i].arrays[j].data != NULL) {
@@ -119,13 +127,14 @@ static void getGroups(struct mg_connection *connection,
                        i + 1,
                        occupied,
                        available)) {
+
             free(json);
+            mg_http_reply(connection, 500, "", "JSON generation failed\n");
             return;
         }
 
         size_t arrayCount = 0;
 
-        // Second loop: populate the arrays field.
         for (size_t j = 0; j < MAX_ARRAY_PER_GROUP; j++) {
 
             ManagedArray *array = &manager->groups[i].arrays[j];
@@ -139,23 +148,27 @@ static void getGroups(struct mg_connection *connection,
                            arrayCount == 0 ? "" : ",",
                            j + 1,
                            array->size)) {
+
                 free(json);
+                mg_http_reply(connection, 500, "", "JSON generation failed\n");
                 return;
             }
 
             arrayCount++;
         }
 
-        // Close the arrays field and the group object.
         if (appendJson(&json, &capacity, &length, "]}")) {
+
             free(json);
+            mg_http_reply(connection, 500, "", "JSON generation failed\n");
             return;
         }
     }
 
-    // Close the groups array and the root JSON object.
     if (appendJson(&json, &capacity, &length, "]}")) {
+
         free(json);
+        mg_http_reply(connection, 500, "", "JSON generation failed\n");
         return;
     }
 
@@ -167,20 +180,175 @@ static void getGroups(struct mg_connection *connection,
 }
 
 
+/* Extract and validate the requested array size. */
+
+static int parseArraySize(struct mg_str body, size_t *size) {
+
+    if (size == NULL) {
+        return -1;
+    }
+
+    int tokenLength = 0;
+
+    int tokenPosition = mg_json_get(
+        body,
+        "$.size",
+        &tokenLength
+    );
+
+    if (tokenPosition < 0 || tokenLength <= 0) {
+        return -1;
+    }
+
+    if ((size_t)tokenPosition > body.len ||
+        (size_t)tokenLength > body.len - (size_t)tokenPosition) {
+        return -1;
+    }
+
+    size_t value = 0;
+
+    for (int i = 0; i < tokenLength; i++) {
+
+        char character = body.buf[tokenPosition + i];
+
+        if (character < '0' || character > '9') {
+            return -1;
+        }
+
+        size_t digit = (size_t)(character - '0');
+
+        if (value > (MAX_SIZE - digit) / 10) {
+            return -1;
+        }
+
+        value = value * 10 + digit;
+    }
+
+    if (value == 0 || value > MAX_SIZE) {
+        return -1;
+    }
+
+    *size = value;
+
+    return 0;
+}
 
 
+/* Handle array creation requests. */
 
+static void createArrayHandler(
+    struct mg_connection *connection,
+    struct mg_http_message *message,
+    ArrayManager *manager
+) {
+
+    if (connection == NULL || message == NULL || manager == NULL) {
+        return;
+    }
+
+    /* Verify HTTP method. */
+
+    if (!mg_match(message->method, mg_str("POST"), NULL)) {
+
+        mg_http_reply(connection, 405,
+                      "Content-Type: application/json\r\n",
+                      "{\"error\":\"Method not allowed\"}\n");
+
+        return;
+    }
+
+
+    /* Extract and validate array size. */
+
+    size_t newSize;
+
+    if (parseArraySize(message->body, &newSize) != 0) {
+
+        mg_http_reply(connection, 400,
+                      "Content-Type: application/json\r\n",
+                      "{\"error\":\"Invalid array size\"}\n");
+
+        return;
+    }
+
+
+    /* Call the existing C array manager. */
+
+    int selectedGroup;
+    int selectedSlot;
+
+    int result = createArray(
+        manager,
+        newSize,
+        &selectedGroup,
+        &selectedSlot
+    );
+
+
+    /* Handle creation errors. */
+
+    if (result != CREATE_SUCCESS) {
+
+        if (result == ERR_NO_FREE_SLOTS) {
+
+            mg_http_reply(connection, 409,
+                          "Content-Type: application/json\r\n",
+                          "{\"error\":\"No available slots\"}\n");
+
+        } else if (result == ERR_ALLOCATION_FAILED) {
+
+            mg_http_reply(connection, 500,
+                          "Content-Type: application/json\r\n",
+                          "{\"error\":\"Memory allocation failed\"}\n");
+
+        } else {
+
+            mg_http_reply(connection, 400,
+                          "Content-Type: application/json\r\n",
+                          "{\"error\":\"Array creation failed\"}\n");
+        }
+
+        return;
+    }
+
+
+    /* Return successful creation details. */
+
+    mg_http_reply(connection, 201,
+                  "Content-Type: application/json\r\n",
+                  "{"
+                  "\"status\":\"success\","
+                  "\"message\":\"Array created successfully\","
+                  "\"group\":%d,"
+                  "\"slot\":%d,"
+                  "\"size\":%zu"
+                  "}\n",
+                  selectedGroup + 1,
+                  selectedSlot + 1,
+                  newSize);
+}
+
+
+/* HTTP request router. */
 
 static void eventHandler(struct mg_connection *connection,
                          int event,
                          void *eventData) {
 
     if (event == MG_EV_HTTP_MSG) {
+
         struct mg_http_message *message = eventData;
 
         ArrayManager *manager = connection->fn_data;
 
         if (mg_match(message->uri, mg_str("/api/hello"), NULL)) {
+
+            if (!mg_match(message->method, mg_str("GET"), NULL)) {
+
+                mg_http_reply(connection, 405, "",
+                              "Method not allowed\n");
+                return;
+            }
 
             mg_http_reply(connection, 200,
                           "Content-Type: application/json\r\n",
@@ -188,7 +356,18 @@ static void eventHandler(struct mg_connection *connection,
 
         } else if (mg_match(message->uri, mg_str("/api/groups"), NULL)) {
 
+            if (!mg_match(message->method, mg_str("GET"), NULL)) {
+
+                mg_http_reply(connection, 405, "",
+                              "Method not allowed\n");
+                return;
+            }
+
             getGroups(connection, manager);
+
+        } else if (mg_match(message->uri, mg_str("/api/arrays"), NULL)) {
+
+            createArrayHandler(connection, message, manager);
 
         } else {
 
@@ -200,21 +379,24 @@ static void eventHandler(struct mg_connection *connection,
         }
     }
 }
+
+
+/* Initialize and run the HTTP server. */
+
 int main(void) {
+
     struct mg_mgr manager;
 
     ArrayManager appManager;
     initializeManager(&appManager);
 
-
-
-
-
     mg_mgr_init(&manager);
 
     if (mg_http_listen(&manager, "http://127.0.0.1:8080",
                        eventHandler, &appManager) == NULL) {
+
         fprintf(stderr, "Could not start HTTP server.\n");
+
         mg_mgr_free(&manager);
         return 1;
     }
