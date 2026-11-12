@@ -1,91 +1,122 @@
-async function fetchGroups() {
+const form = document.getElementById("create-array-form");
+const message = document.getElementById("create-message");
 
+function showMessage(text, isError = false) {
+    message.textContent = text;
+    message.classList.toggle("error", isError);
+}
+
+async function refreshDashboard() {
     try {
-
         const response = await fetch("/api/groups");
-
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        }
-
         const data = await response.json();
 
-        console.log(data);
+        if (!response.ok) {
+            throw new Error(data.error || "Could not load groups.");
+        }
+
         renderGroups(data.groups);
-
     } catch (error) {
-
-        console.error("Could not fetch groups:", error);
-
+        showMessage(error.message, true);
     }
-
 }
 
 function renderGroups(groups) {
-
     const container = document.getElementById("groups-container");
+    const occupiedElement = document.getElementById("occupied-slots");
+    const availableElement = document.getElementById("available-slots");
 
-    groups.forEach(function(group) {
+    container.replaceChildren();
 
-        const new_element = document.createElement("article");
+    let occupiedTotal = 0;
+    let availableTotal = 0;
 
-        new_element.classList.add("group-card");
+    groups.forEach((group) => {
+        occupiedTotal += group.occupied;
+        availableTotal += group.available;
+
+        const card = document.createElement("article");
+        card.className = "group-card";
 
         const heading = document.createElement("h3");
+        heading.textContent = `Group ${group.group}`;
 
         const occupied = document.createElement("p");
-
-        const slotGrid = document.createElement("div");
-        slotGrid.classList.add("slot-grid");
-
-        // Generate the 100 slot indicators
-        for (let slot = 1; slot <= 100; slot++) {
-
-            const slotElement = document.createElement("div");
-
-            slotElement.classList.add("slot");
-
-            // Check whether this slot contains an array
-            const isOccupied = group.arrays.some(function(array) {
-                return array.slot === slot;
-            });
-
-            // Apply the appropriate CSS class
-            if (isOccupied) {
-                slotElement.classList.add("occupied");
-            } else {
-                slotElement.classList.add("empty");
-            }
-
-            slotGrid.appendChild(slotElement);
-
-        }
-
         occupied.textContent = `Occupied slots: ${group.occupied}`;
 
         const available = document.createElement("p");
-
         available.textContent = `Available slots: ${group.available}`;
 
-        heading.textContent = `Group ${group.group}`;
+        const slots = document.createElement("div");
+        slots.className = "slot-grid";
 
-        new_element.appendChild(heading);
-        new_element.appendChild(occupied);
-        new_element.appendChild(available);
-        new_element.appendChild(slotGrid);
+        group.arrays.forEach((array) => {
+            const slot = document.createElement("div");
+            slot.className = "slot occupied";
+            slot.title = `Slot ${array.slot}: ${array.size} elements`;
+            slots.appendChild(slot);
+        });
 
-        container.appendChild(new_element);
+        for (
+            let i = group.arrays.length;
+            i < group.occupied + group.available;
+            i++
+        ) {
+            const slot = document.createElement("div");
+            slot.className = "slot empty";
+            slots.appendChild(slot);
+        }
 
+        card.append(heading, occupied, available, slots);
+        container.appendChild(card);
     });
 
+    document.getElementById("total-groups").textContent = groups.length;
+    occupiedElement.textContent = occupiedTotal;
+    availableElement.textContent = availableTotal;
 }
 
-fetchGroups();
-
-const form = document.getElementById("create-array-form");
-
-form.addEventListener("submit", function(event) {
-
+form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    const size = Number(
+        document.getElementById("array-size").value
+    );
+
+    if (!Number.isInteger(size) || size < 1 || size > 10000) {
+        showMessage(
+            "Array size must be between 1 and 10000.",
+            true
+        );
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/arrays", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({size})
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.error || "Array creation failed."
+            );
+        }
+
+        showMessage(
+            `Array created in Group ${data.group}, Slot ${data.slot}.`
+        );
+
+        form.reset();
+        await refreshDashboard();
+    } catch (error) {
+        showMessage(error.message, true);
+    }
 });
+
+refreshDashboard();
