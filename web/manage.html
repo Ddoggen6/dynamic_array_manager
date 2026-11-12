@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,20 +11,200 @@
 </head>
 
 <body>
-
     <main class="management-container">
-
         <header class="management-header">
             <h1>Array Management</h1>
-            <button onclick="window.location.href='index.html'">
+
+            <button
+                class="secondary-button"
+                onclick="window.location.href='index.html'"
+            >
                 Back to Dashboard
             </button>
+
             <p>Manage your allocated memory arrays.</p>
         </header>
 
+        <p id="manage-message" class="form-message"></p>
+
+        <section class="management-card">
+            <h2>Select Array</h2>
+
+            <form id="array-form">
+                <div class="form-group">
+                    <label for="group">Group number</label>
+                    <input
+                        class="form-control"
+                        id="group"
+                        name="group"
+                        type="number"
+                        min="1"
+                        max="10"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="slot">Slot number</label>
+                    <input
+                        class="form-control"
+                        id="slot"
+                        name="slot"
+                        type="number"
+                        min="1"
+                        max="100"
+                        required
+                    >
+                </div>
+
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
+                    Display Array
+                </button>
+
+                <button
+                    class="secondary-button"
+                    id="refresh-array"
+                    type="button"
+                >
+                    Refresh
+                </button>
+            </form>
+
+            <pre id="array-output">No array selected.</pre>
+        </section>
+
+        <section class="management-card">
+            <h2>Resize Array</h2>
+
+            <form id="resize-form">
+                <div class="form-group">
+                    <label for="resize-size">New size</label>
+                    <input
+                        class="form-control"
+                        id="resize-size"
+                        name="size"
+                        type="number"
+                        min="1"
+                        max="10000"
+                        required
+                    >
+                </div>
+
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
+                    Resize
+                </button>
+            </form>
+        </section>
+
+        <section class="management-card">
+            <h2>Add Element</h2>
+
+            <form id="element-form">
+                <div class="form-group">
+                    <label for="position">Insertion position</label>
+                    <input
+                        class="form-control"
+                        id="position"
+                        name="position"
+                        type="number"
+                        min="1"
+                        max="10001"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="value">Integer value</label>
+                    <input
+                        class="form-control"
+                        id="value"
+                        name="value"
+                        type="number"
+                        required
+                    >
+                </div>
+
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
+                    Add Element
+                </button>
+            </form>
+        </section>
+
+        <section class="management-card">
+            <h2>Remove Element</h2>
+
+            <form id="remove-form">
+                <div class="form-group">
+                    <label for="remove-position">Removal position</label>
+                    <input
+                        class="form-control"
+                        id="remove-position"
+                        name="position"
+                        type="number"
+                        min="1"
+                        max="10000"
+                        required
+                    >
+                </div>
+
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
+                    Remove Element
+                </button>
+            </form>
+        </section>
+
+        <section class="management-card">
+            <h2>Delete Array</h2>
+
+            <form id="delete-form">
+                <div class="form-group">
+                    <label for="delete-group">Group number</label>
+                    <input
+                        class="form-control"
+                        id="delete-group"
+                        name="group"
+                        type="number"
+                        min="1"
+                        max="10"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="delete-slot">Slot number</label>
+                    <input
+                        class="form-control"
+                        id="delete-slot"
+                        name="slot"
+                        type="number"
+                        min="1"
+                        max="100"
+                        required
+                    >
+                </div>
+
+                <button
+                    class="primary-button"
+                    type="submit"
+                >
+                    Delete Array
+                </button>
+            </form>
+        </section>
     </main>
 
     <script src="manage.js"></script>
-
 </body>
 </html>
