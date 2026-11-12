@@ -210,3 +210,28 @@ body {
     }
 
 }
+
+.form-message {
+    margin-top: 14px;
+    color: var(--text-muted);
+}
+
+.form-message.error {
+    color: #f87171;
+}
+
+button {
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+pre {
+    margin-top: 20px;
+    padding: 16px;
+    overflow-x: auto;
+    color: var(--text);
+    background: var(--background);
+    border-radius: 8px;
+}
