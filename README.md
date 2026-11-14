@@ -13,7 +13,7 @@ A modular C project exploring dynamic memory allocation, pointers, array manipul
 ![Systems Programming](https://img.shields.io/badge/Systems-Programming-8B0000?style=for-the-badge)
 ![Memory Management](https://img.shields.io/badge/Memory-Management-333333?style=for-the-badge)
 ![Web Interface](https://img.shields.io/badge/Web-Interface-6D4BC3?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-In_Development-555555?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Complete-2E8B57?style=for-the-badge)
 
 </div>
 
