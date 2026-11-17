@@ -5,7 +5,7 @@
 
 **Understanding memory. Building systems. Pursuing security.**
 
-A modular C project exploring dynamic memory allocation, pointers, array manipulation, and systems programming through a command-line application and an experimental web interface.
+A modular C project exploring dynamic memory allocation, pointers, array manipulation, and systems programming through a command-line application and a web interface.
 
 <br>
 
@@ -27,9 +27,7 @@ Instead of keeping these concepts limited to isolated exercises, I wanted to com
 
 The application allows users to create and manage dynamically allocated integer arrays through a command-line interface. Arrays are organized into groups, with each group containing a fixed number of available slots.
 
-The project has also expanded beyond the command line. I am experimenting with a web interface that communicates directly with the C application through an HTTP server and a JSON API.
-
-This introduces another layer of learning: understanding how a systems-level application can expose its functionality to a browser without moving its core logic into another language.
+The project also includes a web interface that communicates with the C application through an HTTP server and a JSON API. The C backend retains responsibility for memory management and array operations, while the frontend handles user interaction and displays the results.
 
 This project represents a stage in my development as a programmer: moving from learning individual concepts to applying them together in a practical implementation.
 
@@ -59,6 +57,7 @@ The main objectives behind this project are:
 |---|---|
 | Array Creation | Dynamically allocate integer arrays. |
 | Group Management | Organize arrays into groups and slots. |
+| Automatic Allocation | Automatically select the group and first available slot when creating an array. |
 | Array Selection | Retrieve an existing array by its group and slot. |
 | Resizing | Change an array's allocated size. |
 | Element Insertion | Insert values at a specified position. |
@@ -79,8 +78,7 @@ The main objectives behind this project are:
 | Slot Statistics | Report occupied and available slots per group. |
 | Frontend Communication | Retrieve backend data using JavaScript `fetch()`. |
 | Dashboard | Display a web-based interface for memory management. |
-
-**Current implementation note:** The group-information endpoint and frontend communication are working. Dynamic rendering and additional array-management operations through the web interface are still under development.
+| Array Management Page | Create, inspect, resize, modify, and delete arrays through the browser. |
 
 ## 🏗️ Project Structure
 
@@ -102,7 +100,10 @@ dynamic_array_manager/
 ├── web/
 │   ├── index.html
 │   ├── style.css
-│   └── script.js
+│   ├── script.js
+│   ├── manage.html
+│   ├── manage.css
+│   └── manage.js
 │
 ├── README.md
 │
@@ -122,15 +123,20 @@ dynamic_array_manager/
 | `mongoose.h` | Mongoose declarations and configuration. |
 | `index.html` | Web dashboard structure. |
 | `style.css` | Dashboard layout and visual styling. |
-| `script.js` | Frontend logic and communication with the C backend. |
+| `script.js` | Dashboard rendering and communication with the C backend. |
+| `manage.html` | Array-management page structure. |
+| `manage.css` | Styling for the array-management page. |
+| `manage.js` | Array-management actions and API communication. |
 
 The CLI and web server are separate executables. Both use the same array-management implementation, but each has its own entry point.
 
 ## 🌐 Web Architecture
 
-The web interface introduces a separation between the frontend and the application's core logic.
+The web interface separates frontend interaction from the application's core logic.
 
 The browser communicates with the C backend through HTTP requests. Mongoose handles incoming connections, serves static frontend resources, and forwards API requests to the appropriate C functions.
+
+The array-management operations remain implemented in C; JavaScript sends requests and updates the interface.
 
 The current architecture follows this flow:
 
@@ -158,12 +164,35 @@ The current architecture follows this flow:
              Browser
 ```
 
+### Automatic Array Allocation
+
+Array creation does not require the user to select a group or slot manually.
+
+When a creation request is received:
+
+1. The C manager evaluates the available space in each group.
+2. It selects the group with the most free slots.
+3. It searches that group for the first empty slot.
+4. It dynamically allocates the requested memory.
+5. It updates the group's allocation count.
+6. It returns the selected group, slot, and array size.
+
+This allocation process is handled entirely by the C backend.
+
+The management interface uses group and slot numbers only when retrieving or modifying an existing array.
+
 ### Current API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
 | GET | `/api/hello` | Basic server connectivity test. |
-| GET | `/api/groups` | Retrieve information about all groups. |
+| GET | `/api/groups` | Retrieve information about all groups and their allocated arrays. |
+| POST | `/api/arrays` | Create an array using automatic allocation. |
+| GET | `/api/arrays/{group}/{slot}` | Retrieve an array and its elements. |
+| PATCH | `/api/arrays/{group}/{slot}` | Resize an existing array. |
+| DELETE | `/api/arrays/{group}/{slot}` | Delete an array and release its memory. |
+| POST | `/api/arrays/{group}/{slot}/elements` | Insert an integer at a specified position. |
+| DELETE | `/api/arrays/{group}/{slot}/elements/{position}` | Remove an element at a specified position. |
 
 ### Example API Response
 
@@ -199,6 +228,8 @@ The `/api/groups` endpoint returns a JSON representation of the manager's curren
 ```
 
 The response includes group numbers, occupied slots, available slots, and metadata about allocated arrays.
+
+When creating an array, the client supplies its requested size—not a group or slot. The C manager determines the appropriate group and assigns the first empty slot in that group.
 
 Group and slot numbers are represented using one-based indexing in the API, while the underlying C implementation uses zero-based indexing.
 
@@ -314,7 +345,7 @@ Working with header files, function prototypes, and separate compilation helped 
 
 The web interface introduced me to the relationship between HTTP servers, clients, and backend applications.
 
-Through Mongoose, I am exploring:
+Through Mongoose, I explored:
 
 - HTTP server initialization.
 - Request handling and URI matching.
@@ -328,7 +359,7 @@ Through Mongoose, I am exploring:
 <details>
 <summary><b>Frontend and Backend Communication</b></summary>
 
-Using HTML, CSS, and JavaScript, I am learning how a browser can interact with an application written in C.
+Using HTML, CSS, and JavaScript, I explored how a browser can interact with an application written in C.
 
 This includes:
 
