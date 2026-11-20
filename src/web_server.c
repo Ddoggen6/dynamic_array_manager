@@ -926,7 +926,7 @@ int main(void) {
 
     mg_mgr_init(&manager);
 
-    if (mg_http_listen(&manager, "http://127.0.0.1:8080",
+    if (mg_http_listen(&manager, "http://0.0.0.0:8080",
                        eventHandler, &appManager) == NULL) {
 
         fprintf(stderr, "Could not start HTTP server.\n");
